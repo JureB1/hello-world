@@ -11,7 +11,7 @@
       securityGroup: slave-server 
       instanceType: t2.micro 
       region: us-west-2a
-      keyPair: wp 
+      keyPair: Master 
       count: 1
 
     tasks:    
