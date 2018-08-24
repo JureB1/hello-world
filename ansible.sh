@@ -17,5 +17,5 @@ sudo apt-get -y install ansible
 sudo apt install -y awscli                      # Install AWSCLI
 sudo aws configure                                # Open AWS configure file for adding the AWS key
 
-sudo ansible-playbook -i ./hosts wordpress.yml    # Run the PlayBook
+sudo ansible-playbook -i ./hosts install wordress[original].yml   # Run the PlayBook
 
