@@ -1,0 +1,7 @@
+---
+instance_type: t2.micro
+security_group: Master
+image: ami-51537029
+keypair: Slave
+region: us-west-2
+count: 1

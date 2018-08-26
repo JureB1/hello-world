@@ -1,0 +1,14 @@
+---
+- name: Ensure php packages are installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - php7.0
+    - php7.0-mysql
+    - php7.0-gd
+    - php7.0-json
+    - php7.0-mbstring
+    - php7.0-mysql
+    - libapache2-mod-php7.0
+    - phpmyadmin

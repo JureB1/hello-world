@@ -1,0 +1,45 @@
+---
+- name: Create Key Pair
+  ec2_key:
+    name: "{{ keypair }}"
+    region: "{{ region }}"
+  register: ec2key
+
+- name: Save Private Key
+  copy: content="{{ ec2key.key.private_key }}" dest="./{{ keypair }}.pem" mode=0600
+  when: ec2key.changed
+
+- name: Start The New EC2 Instance
+  local_action: ec2
+                group={{ security_group }}
+                instance_type={{ instance_type}}
+                image={{ image }}
+                wait=true
+                region={{ region }}
+                keypair={{ keypair }}
+                count={{count}}
+  register: ec2
+
+- name: Add The Newly Created EC2 Instance Below [slave-server] In 'hosts'
+  lineinfile:
+    path: ./hosts
+    insertafter: slave-server
+    line: "{{ item.public_ip }} ansible_ssh_private_key_file=./{{ keypair }}.pem"
+  with_items: "{{ ec2.instances }}"
+
+- name: Wait For SSH To Come Up
+  wait_for:
+    host: "{{ item.public_ip }}"
+    port: 22
+    state: started
+  with_items: "{{ ec2.instances }}"
+
+- name: Add Tag To Instance(s)
+  local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
+  with_items: "{{ ec2.instances }}"
+  args:
+    tags:
+      Name: Slave-Server
+
+- name: Refresh inventory to ensure new instaces exist in inventory
+  meta: refresh_inventory
