@@ -19,4 +19,7 @@ apt-get -y install ansible
 apt install -y awscli                      # Install AWSCLI
 aws configure                              # For adding AWS key
 
+cd ansible
+sudo ansible-playbook -i ./hosts site.yml
+
 
